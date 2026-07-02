@@ -1,0 +1,4 @@
+# Python deps for scripts/ and sample/
+requests>=2.28     # HTTP calls to the Tally gateway
+pandas>=1.5        # building/reading review sheets (gap-check, reconciliation)
+openpyxl>=3.1      # .xlsx read/write

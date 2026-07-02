@@ -1,0 +1,17 @@
+<!-- Create a LEDGER (master). REPORTNAME=All Masters. NOTE: include the inner <NAME> tag (quirks #14).
+     curl.exe -s -X POST -H "Content-Type: text/xml" --data-binary @09-create-ledger.xml http://localhost:9000 -->
+<ENVELOPE>
+ <HEADER><TALLYREQUEST>Import Data</TALLYREQUEST></HEADER>
+ <BODY><IMPORTDATA>
+  <REQUESTDESC><REPORTNAME>All Masters</REPORTNAME>
+   <STATICVARIABLES><SVCURRENTCOMPANY>YOUR COMPANY NAME</SVCURRENTCOMPANY></STATICVARIABLES>
+  </REQUESTDESC>
+  <REQUESTDATA><TALLYMESSAGE xmlns:UDF="TallyUDF">
+   <LEDGER NAME="New Party Ledger" ACTION="Create">
+    <NAME>New Party Ledger</NAME>
+    <PARENT>Sundry Creditors</PARENT>
+    <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+   </LEDGER>
+  </TALLYMESSAGE></REQUESTDATA>
+ </IMPORTDATA></BODY>
+</ENVELOPE>

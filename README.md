@@ -8,15 +8,24 @@ Everything here is generic. To use it for a specific client, create a **conventi
 [`conventions-template.md`](./conventions-template.md) (one per company) — that's what lets the AI post
 entries indistinguishable from the owner's own.
 
+## Start here
+1. [`SETUP.md`](./SETUP.md) — enable the gateway & confirm connectivity (5 min).
+2. [`sample/`](./sample/) — seed a **throwaway practice company** and try the toolkit safely.
+3. [`tally-general-guide.md`](./tally-general-guide.md) + [`quirks.md`](./quirks.md) — the mechanics & traps.
+4. Copy [`conventions-template.md`](./conventions-template.md) per real client.
+
 ## Contents
 
 | File | What it covers |
 |---|---|
-| [`tally-general-guide.md`](./tally-general-guide.md) | Gateway mechanics: enabling it, connectivity checks, reading (Export collections / Voucher Register / Trial Balance / P&L), data structures, writing (voucher Import), and a safety checklist. **Read first.** |
-| [`quirks.md`](./quirks.md) | Consolidated quick-reference of every non-obvious trap (gateway, reading, writing, source files). Saves you re-discovering them. |
-| [`conventions-template.md`](./conventions-template.md) | **Blank template** to build a per-company playbook: chart of accounts, posting recipes, narration/sign conventions, source files, and the gap-analysis workflow. |
-| [`examples/`](./examples/) | Copy-paste XML request templates (list companies, read ledgers, read day book, import a receipt/trade). |
-| [`scripts/`](./scripts/) | Reusable Python helpers: gap-check, idempotent voucher import (REMOTEID), and read-back reconciliation. Config-driven — set your company + ledger map at the top. |
+| [`SETUP.md`](./SETUP.md) | Enable the Tally HTTP-XML gateway, licence check, first connectivity test, Python deps. |
+| [`tally-general-guide.md`](./tally-general-guide.md) | Gateway mechanics: reading (Voucher Register / Trial Balance / P&L / collections), data structures, writing (voucher Import), safety checklist. |
+| [`quirks.md`](./quirks.md) | 35 non-obvious traps (gateway, reading, writing, gap-analysis, source files). Saves you re-discovering them. |
+| [`conventions-template.md`](./conventions-template.md) | **Blank template** for a per-company playbook (chart of accounts, posting recipes, narration/sign conventions, gap-analysis workflow). |
+| [`examples/`](./examples/) | 13 copy-paste XML templates: list companies, read ledgers/day-book, export Trial Balance & P&L, import Receipt/Payment/Contra/Journal/Purchase, create ledger/stock-item, delete voucher. |
+| [`scripts/`](./scripts/) | `tally_io.py` — config-driven helpers: export reports, idempotent voucher import (REMOTEID), journals, delete, and the safe workflow. |
+| [`sample/`](./sample/) | Practice sandbox: seed a throwaway company with sample masters + vouchers, then work the exercises. |
+| `requirements.txt`, `LICENSE` | Python deps; MIT licence (fill in the copyright holder). |
 
 ## 30-second orientation
 
