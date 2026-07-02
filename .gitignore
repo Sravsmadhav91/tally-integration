@@ -1,0 +1,13 @@
+# Local Tally request/response scratch & generated output
+*.out
+*.tmp
+*.log
+scratch/
+out/
+__pycache__/
+*.pyc
+
+# OS noise
+Thumbs.db
+desktop.ini
+.DS_Store

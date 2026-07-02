@@ -1,0 +1,46 @@
+<!-- Write: import ONE dividend Receipt (YOUR COMPANY NAME convention).
+     Cr Dividend Received (net) / Dr ICICI; narration = company; bank type = Inter Bank Transfer.
+     RULE: one <TALLYMESSAGE> per voucher. Run a gap-check first so you don't duplicate.
+     curl.exe -s -X POST -H "Content-Type: text/xml" --data-binary @04-import-receipt-dividend.xml http://localhost:9000 -->
+<ENVELOPE>
+ <HEADER>
+  <TALLYREQUEST>Import Data</TALLYREQUEST>
+ </HEADER>
+ <BODY>
+  <IMPORTDATA>
+   <REQUESTDESC>
+    <REPORTNAME>Vouchers</REPORTNAME>
+    <STATICVARIABLES>
+     <SVCURRENTCOMPANY>YOUR COMPANY NAME</SVCURRENTCOMPANY>
+    </STATICVARIABLES>
+   </REQUESTDESC>
+   <REQUESTDATA>
+    <TALLYMESSAGE xmlns:UDF="TallyUDF">
+     <VOUCHER VCHTYPE="Receipt" ACTION="Create" OBJVIEW="Accounting Voucher View">
+      <DATE>20260330</DATE>
+      <EFFECTIVEDATE>20260330</EFFECTIVEDATE>
+      <VOUCHERTYPENAME>Receipt</VOUCHERTYPENAME>
+      <NARRATION>COMPANY NAME (dividend payer)</NARRATION>
+      <ALLLEDGERENTRIES.LIST>
+       <LEDGERNAME>Dividend Received</LEDGERNAME>
+       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+       <AMOUNT>24480.00</AMOUNT>
+      </ALLLEDGERENTRIES.LIST>
+      <ALLLEDGERENTRIES.LIST>
+       <LEDGERNAME>Bank Ledger Name</LEDGERNAME>
+       <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+       <AMOUNT>-24480.00</AMOUNT>
+       <BANKALLOCATIONS.LIST>
+        <DATE>20260330</DATE>
+        <INSTRUMENTDATE>20260330</INSTRUMENTDATE>
+        <TRANSACTIONTYPE>Inter Bank Transfer</TRANSACTIONTYPE>
+        <PAYMENTFAVOURING>Dividend Received</PAYMENTFAVOURING>
+        <AMOUNT>-24480.00</AMOUNT>
+       </BANKALLOCATIONS.LIST>
+      </ALLLEDGERENTRIES.LIST>
+     </VOUCHER>
+    </TALLYMESSAGE>
+   </REQUESTDATA>
+  </IMPORTDATA>
+ </BODY>
+</ENVELOPE>

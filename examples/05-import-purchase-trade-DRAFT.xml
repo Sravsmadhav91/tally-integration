@@ -1,0 +1,59 @@
+<!-- Write: import ONE share/F&O Purchase as an INVENTORY INVOICE voucher.
+     ============================================================================
+     STATUS: DRAFT - structure mirrors a real exported voucher (the 01-Apr-2025
+     brought-forward F&O purchase) but a TRADE import has NOT YET been test-run.
+     Test on ONE voucher, read it back, and reconcile BEFORE any bulk trade import.
+     ============================================================================
+     Verified field signs from the live voucher:
+       - VCHTYPE=Purchase, OBJVIEW="Invoice Voucher View", ISINVOICE=Yes
+       - Inventory AMOUNT is NEGATIVE for a purchase
+       - ACCOUNTINGALLOCATIONS -> purchase ledger: ISDEEMEDPOSITIVE=Yes, AMOUNT negative (debit)
+       - Party leg is <LEDGERENTRIES.LIST> (NO "ALL" prefix): Zerodha ISDEEMEDPOSITIVE=No, AMOUNT positive (credit)
+     For a SALE: swap to VCHTYPE=Sales, Sale ledger (ISDEEMEDPOSITIVE=No, +AMOUNT),
+       inventory AMOUNT positive, party Zerodha (ISDEEMEDPOSITIVE=Yes, -AMOUNT).
+     Aggregate the tradebook's fills: one voucher per scrip x day x direction
+       (sum qty, weighted-average rate). Create the stock item first if missing. -->
+<ENVELOPE>
+ <HEADER>
+  <TALLYREQUEST>Import Data</TALLYREQUEST>
+ </HEADER>
+ <BODY>
+  <IMPORTDATA>
+   <REQUESTDESC>
+    <REPORTNAME>Vouchers</REPORTNAME>
+    <STATICVARIABLES>
+     <SVCURRENTCOMPANY>YOUR COMPANY NAME</SVCURRENTCOMPANY>
+    </STATICVARIABLES>
+   </REQUESTDESC>
+   <REQUESTDATA>
+    <TALLYMESSAGE xmlns:UDF="TallyUDF">
+     <VOUCHER VCHTYPE="Purchase" ACTION="Create" OBJVIEW="Invoice Voucher View">
+      <DATE>20250401</DATE>
+      <EFFECTIVEDATE>20250401</EFFECTIVEDATE>
+      <VOUCHERTYPENAME>Purchase</VOUCHERTYPENAME>
+      <ISINVOICE>Yes</ISINVOICE>
+      <NARRATION>RECLTD25APRFUT</NARRATION>
+      <ALLINVENTORYENTRIES.LIST>
+       <STOCKITEMNAME>RECLTD25APRFUT</STOCKITEMNAME>
+       <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+       <RATE>431.10/nos</RATE>
+       <ACTUALQTY>1000 nos</ACTUALQTY>
+       <BILLEDQTY>1000 nos</BILLEDQTY>
+       <AMOUNT>-431100.00</AMOUNT>
+       <ACCOUNTINGALLOCATIONS.LIST>
+        <LEDGERNAME>Share Purchase Equity FO</LEDGERNAME>
+        <ISDEEMEDPOSITIVE>Yes</ISDEEMEDPOSITIVE>
+        <AMOUNT>-431100.00</AMOUNT>
+       </ACCOUNTINGALLOCATIONS.LIST>
+      </ALLINVENTORYENTRIES.LIST>
+      <LEDGERENTRIES.LIST>
+       <LEDGERNAME>Zerodha</LEDGERNAME>
+       <ISDEEMEDPOSITIVE>No</ISDEEMEDPOSITIVE>
+       <AMOUNT>431100.00</AMOUNT>
+      </LEDGERENTRIES.LIST>
+     </VOUCHER>
+    </TALLYMESSAGE>
+   </REQUESTDATA>
+  </IMPORTDATA>
+ </BODY>
+</ENVELOPE>

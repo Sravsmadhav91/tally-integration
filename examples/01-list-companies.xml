@@ -1,0 +1,27 @@
+<!-- Read: list loaded companies (no company context needed). Good first probe.
+     curl.exe -s -X POST -H "Content-Type: text/xml" --data-binary @01-list-companies.xml http://localhost:9000 -->
+<ENVELOPE>
+ <HEADER>
+  <VERSION>1</VERSION>
+  <TALLYREQUEST>Export</TALLYREQUEST>
+  <TYPE>Collection</TYPE>
+  <ID>List of Companies</ID>
+ </HEADER>
+ <BODY>
+  <DESC>
+   <STATICVARIABLES>
+    <SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT>
+   </STATICVARIABLES>
+   <TDL>
+    <TDLMESSAGE>
+     <COLLECTION NAME="List of Companies" ISMODIFY="No">
+      <TYPE>Company</TYPE>
+      <NATIVEMETHOD>Name</NATIVEMETHOD>
+      <NATIVEMETHOD>StartingFrom</NATIVEMETHOD>
+      <NATIVEMETHOD>BooksFrom</NATIVEMETHOD>
+     </COLLECTION>
+    </TDLMESSAGE>
+   </TDL>
+  </DESC>
+ </BODY>
+</ENVELOPE>

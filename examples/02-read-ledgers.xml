@@ -1,0 +1,28 @@
+<!-- Read: all ledgers with parent group and balances (Collection export). -->
+<ENVELOPE>
+ <HEADER>
+  <VERSION>1</VERSION>
+  <TALLYREQUEST>Export</TALLYREQUEST>
+  <TYPE>Collection</TYPE>
+  <ID>LedColl</ID>
+ </HEADER>
+ <BODY>
+  <DESC>
+   <STATICVARIABLES>
+    <SVCURRENTCOMPANY>YOUR COMPANY NAME</SVCURRENTCOMPANY>
+    <SVEXPORTFORMAT>$$SysName:XML</SVEXPORTFORMAT>
+   </STATICVARIABLES>
+   <TDL>
+    <TDLMESSAGE>
+     <COLLECTION NAME="LedColl" ISMODIFY="No">
+      <TYPE>Ledger</TYPE>
+      <NATIVEMETHOD>Name</NATIVEMETHOD>
+      <NATIVEMETHOD>Parent</NATIVEMETHOD>
+      <NATIVEMETHOD>OpeningBalance</NATIVEMETHOD>
+      <NATIVEMETHOD>ClosingBalance</NATIVEMETHOD>
+     </COLLECTION>
+    </TDLMESSAGE>
+   </TDL>
+  </DESC>
+ </BODY>
+</ENVELOPE>
