@@ -24,6 +24,38 @@ reporting **safely** on live books. Per real client, create a **conventions file
 indistinguishable from the owner's own.
 </details>
 
+## See it in action
+
+Here's what the whole thing actually *looks like* — you type in plain English, the AI does the work and
+**shows you before saving** (this uses the throwaway [`sample/`](./sample/) company, so it's safe to copy):
+
+```text
+You:  Reconcile "Practice Bank" for FY25-26 against sample/statement_2526.csv —
+      show me only the mismatched dates.
+
+AI:   Pulled 41 vouchers + the statement. Comparing by net daily movement…
+      3 dates don't match, net gap −53,200:
+        05-Jul-2025   book 0        statement −12,000    (statement-only — not in Tally)
+        18-Sep-2025   book −8,000   statement −49,200    (₹41,200 short in the book)
+        22-Feb-2026   book +6,000   statement 0          (in book, not on statement)
+      Want me to draft the two missing entries for your review?
+
+You:  Yes, draft them — don't post yet.
+
+AI:   Draft (dry-run, nothing saved):
+        1) 05-Jul-2025  Payment  Practice Bank → Courier Charges   12,000
+        2) 18-Sep-2025  Payment  Practice Bank → Vendor XYZ        41,200
+      Both balance. Say "post" to write them (each gets a REMOTEID, re-runnable/reversible).
+
+You:  post
+
+AI:   Posted 2 vouchers (created, no exceptions). Re-reading the ledger…
+      Practice Bank now ties to the statement to the rupee. ✅
+```
+
+Reads and reports are always safe to run; **writes only happen after you approve.** More ready-to-paste
+prompts in [`PROMPTS.md`](./PROMPTS.md).
+
 ## Start here
 1. [`ENVIRONMENT.md`](./ENVIRONMENT.md) — **new to this?** Install the AI assistant, Python & Tally (zero coding assumed).
 2. [`SETUP.md`](./SETUP.md) — enable the gateway & confirm connectivity (5 min).
@@ -44,7 +76,8 @@ indistinguishable from the owner's own.
 | [`examples/`](./examples/) | 13 copy-paste XML templates: list companies, read ledgers/day-book, export Trial Balance & P&L, import Receipt/Payment/Contra/Journal/Purchase, create ledger/stock-item, delete voucher. |
 | [`scripts/`](./scripts/) | `tally_io.py` — config-driven helpers: export reports, idempotent voucher import (REMOTEID), journals, delete, safe workflow. **`tally_report.py`** — cached SQL reporting: pull a date range once into SQLite, run ready-made reports (trial-balance, group-summary, stock, ledger, TDS…) or ad-hoc `--sql`, refresh by timeframe; add a report by dropping a `.sql` file. **`import_sheet.py`** — a reviewed Excel/CSV → vouchers (dry-run, then `--post`; idempotent). **`pdf_extract.py`** — dump text/tables from (password-protected) PDFs to feed that sheet. |
 | [`sample/`](./sample/) | Practice sandbox: **two years** — a *correct* FY24-25 reference year (multi-bank, sales/purchase, **GST**, **TDS**, **loans**) and a *flawed* FY25-26 practice year (opens from carry-forward) with **5 planted issues** + a mismatching bank-statement CSV. Includes **Lesson 0** (post vouchers from an Excel, bank lines from a PDF), an 8-step exercise set, and an [answer key](./sample/ANSWERS.md). Load via seed script, XML import, or a restored Tally backup. |
-| `requirements.txt`, `requirements-optional.txt`, `LICENSE` | Core Python deps; optional OCR/PDF power tools; MIT licence (fill in the copyright holder). |
+| `requirements.txt`, `requirements-optional.txt`, `LICENSE` | Core Python deps; optional OCR/PDF power tools; MIT licence. |
+| [`CHANGELOG.md`](./CHANGELOG.md) · [`CONTRIBUTING.md`](./CONTRIBUTING.md) · [`SECURITY.md`](./SECURITY.md) | Release notes; how to raise issues / PRs; data-privacy & security policy. |
 
 ## 30-second orientation (for developers — non-techies can skip this)
 
@@ -67,3 +100,19 @@ indistinguishable from the owner's own.
 
 > **AI drafts, the accountant decides.** Every batch should go through a human-reviewed sheet before posting,
 > and tax-sensitive judgement (audit, loss set-off, prior-year errors) stays with the CA.
+
+## Contributing & community
+
+Contributions are very welcome — a fixed typo, a new [quirk](./quirks.md) you hit, a report, or a whole
+workflow. Because this is public, **anyone can fork and open a Pull Request** — no write access needed.
+
+- **Raise an issue or idea:** use the [issue templates](./.github/ISSUE_TEMPLATE) (bug / feature).
+- **Send a change:** fork → branch → test against the [`sample/`](./sample/) company → open a PR
+  (a checklist template appears). See [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+- **⚠️ Never include real client/personal data** in issues, PRs, or commits — see [`SECURITY.md`](./SECURITY.md).
+- **Release notes:** [`CHANGELOG.md`](./CHANGELOG.md).
+
+## Licence
+
+[MIT](./LICENSE) — free to use, modify, and distribute; provided "as is", no warranty. You're responsible
+for what you post to your own books.

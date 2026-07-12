@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Questions & discussion
+    url: https://github.com/puneetkeshav/tally-integration/discussions
+    about: For how-to questions and general discussion (enable Discussions in repo settings first).
+  - name: Security / data-privacy concerns
+    url: https://github.com/puneetkeshav/tally-integration/blob/main/SECURITY.md
+    about: Please do NOT open a public issue for anything involving real data — read this first.
