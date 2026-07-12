@@ -36,6 +36,11 @@ The AI reads most documents **by itself**, so you don't need a big toolchain:
 Any agentic coding tool works — it just needs to read files and run local commands. Then **open this repo's
 folder in it** so the AI can see the scripts and docs.
 
+> **The repo briefs the AI for you.** It ships an [`AGENTS.md`](./AGENTS.md) (read by Antigravity, Gemini,
+> Cursor, etc.) and a [`CLAUDE.md`](./CLAUDE.md) (Claude Code) — the safety rules and workflow load
+> **automatically** when you open the folder. If your tool doesn't pick them up, just say: *"Read AGENTS.md
+> first, then help me."*
+
 **Option A — Google Antigravity (free; the cheapest way to start, esp. in India).**
 - Download from **<https://antigravity.google>** (Windows / Mac / Linux). **Free for individuals** (public
   preview). It's an *agent-first* IDE with an **Agent panel** where the AI plans and runs steps for you.
