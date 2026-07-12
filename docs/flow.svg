@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 430" font-family="Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#57606a"/>
+    </marker>
+  </defs>
+
+  <rect x="1" y="1" width="938" height="428" rx="16" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="30" y="42" font-size="18" font-weight="700" fill="#1f2328">How it works</text>
+  <text x="30" y="63" font-size="12.5" fill="#57606a">You ask in plain English — the AI does the work and shows you every entry before saving.</text>
+
+  <!-- flow row: boxes centred at y=120, height 70 (85..155) -->
+  <rect x="30" y="85" width="150" height="70" rx="10" fill="#ffffff" stroke="#d0d7de" stroke-width="1.5"/>
+  <text x="105" y="116" text-anchor="middle" font-size="16" font-weight="600" fill="#1f2328">You</text>
+  <text x="105" y="136" text-anchor="middle" font-size="11" fill="#57606a">ask in plain English</text>
+
+  <rect x="250" y="85" width="220" height="70" rx="10" fill="#ffffff" stroke="#0969da" stroke-width="1.8"/>
+  <text x="360" y="112" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2328">AI assistant</text>
+  <text x="360" y="133" text-anchor="middle" font-size="11" fill="#57606a">Claude Code / Google Antigravity</text>
+
+  <rect x="540" y="85" width="180" height="70" rx="10" fill="#ffffff" stroke="#d0d7de" stroke-width="1.5"/>
+  <text x="630" y="112" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2328">TallyPrime</text>
+  <text x="630" y="133" text-anchor="middle" font-size="11" fill="#57606a">gateway · localhost:9000</text>
+
+  <rect x="790" y="85" width="120" height="70" rx="10" fill="#ffffff" stroke="#1a7f37" stroke-width="1.8"/>
+  <text x="850" y="116" text-anchor="middle" font-size="15" font-weight="600" fill="#1f2328">Your books</text>
+  <text x="850" y="136" text-anchor="middle" font-size="11" fill="#57606a">the company</text>
+
+  <!-- arrows -->
+  <line x1="181" y1="120" x2="247" y2="120" stroke="#57606a" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="471" y1="120" x2="537" y2="120" stroke="#57606a" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="721" y1="120" x2="787" y2="120" stroke="#57606a" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="214" y="112" text-anchor="middle" font-size="10" fill="#57606a">asks</text>
+  <text x="504" y="112" text-anchor="middle" font-size="10" fill="#57606a">reads / writes</text>
+  <text x="754" y="112" text-anchor="middle" font-size="10" fill="#57606a">XML</text>
+
+  <!-- sources feeding the AI -->
+  <rect x="250" y="200" width="220" height="54" rx="10" fill="#ffffff" stroke="#d0d7de" stroke-width="1.5"/>
+  <text x="360" y="222" text-anchor="middle" font-size="12.5" font-weight="600" fill="#1f2328">Your files</text>
+  <text x="360" y="241" text-anchor="middle" font-size="10.5" fill="#57606a">bank statements · PDFs · Excel · 26AS</text>
+  <line x1="360" y1="199" x2="360" y2="157" stroke="#57606a" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="404" y="182" text-anchor="middle" font-size="10" fill="#57606a">AI reads</text>
+
+  <!-- control / review-gate banner -->
+  <rect x="30" y="292" width="880" height="112" rx="12" fill="#fff8e6" stroke="#eac54f" stroke-width="1.5"/>
+  <circle cx="52" cy="320" r="9" fill="#1a7f37"/>
+  <path d="M47.5,320 L50.5,323.5 L56,316.5" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="70" y="325" font-size="15" font-weight="700" fill="#1f2328">You stay in control</text>
+  <text x="52" y="352" font-size="12.5" fill="#3d444d">Reads and reports run freely. For anything that writes to your book, the AI first shows a</text>
+  <text x="52" y="372" font-size="12.5" fill="#3d444d"><tspan font-weight="700">dry-run</tspan> — every entry it plans to post — and waits for your approval before writing.</text>
+  <text x="52" y="392" font-size="12.5" fill="#3d444d">Every entry is idempotent (safe to re-run) and reversible. AI drafts, you decide.</text>
+</svg>

@@ -4,6 +4,8 @@
 data entry, bank reconciliation, and reports — reading your bank statements / PDFs / Excel, and **showing
 you every entry before anything is saved**.
 
+![How it works: you ask in plain English, the AI assistant reads your files and talks to the TallyPrime gateway on port 9000, and every write waits for your approval](./docs/flow.svg)
+
 ### 👋 New to this / not a techie? Read this box first
 - **How you use it:** you type requests in **plain English** — *"reconcile ICICI for FY25-26"*, *"post these
   dividends"*, *"show me a P&L"*. The AI reads your files and does the work.

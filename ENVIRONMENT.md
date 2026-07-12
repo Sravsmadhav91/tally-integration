@@ -1,8 +1,10 @@
 # Getting started for accountants (zero coding assumed)
 
-This toolkit is driven by an **AI coding assistant** (like Claude Code) that runs on your computer, talks to
-TallyPrime, and reads your bank statements / PDFs / Excel files. You don't write code — you *ask*, review,
-and approve. This page gets your machine ready.
+This toolkit is driven by an **AI coding assistant** (like **Claude Code** or **Google Antigravity**) that
+runs on your computer, talks to TallyPrime, and reads your bank statements / PDFs / Excel files. You don't
+write code — you *ask*, review, and approve. This page gets your machine ready.
+
+![How it works: you ask in plain English, the AI assistant reads your files and talks to the TallyPrime gateway, and every write waits for your approval](./docs/flow.svg)
 
 ## What using it actually looks like (you chat; you don't type commands)
 A typical session is a **plain-English conversation**:
@@ -21,7 +23,7 @@ The AI reads most documents **by itself**, so you don't need a big toolchain:
 | You need | Why | Skip if… |
 |---|---|---|
 | **TallyPrime** + an active licence | the books live here; the gateway answers on port 9000 | — (required) |
-| **An AI coding assistant** | Claude Code (or an alternative) — the thing you talk to | — (required) |
+| **An AI coding assistant** | **Claude Code** or **Google Antigravity** — the thing you talk to (both set up in §1) | — (required) |
 | **Python 3** + this repo's `requirements.txt` | runs the helper scripts (import, reconcile, review sheets) | — (required) |
 | *Optional power tools* | only for edge cases (see below) | you can add these later, only when a task needs them |
 
@@ -92,10 +94,32 @@ libraries. For a handful of files, the AI's built-in reading is usually all you 
 
 ## 5. Your first 10 minutes
 
-1. Open this repo in your AI assistant.
-2. Build the safe practice company: [`sample/`](./sample/) → create `Tally AI Practice`, seed it, and do
-   **Exercise 1** (read it back). Nothing here touches a real client.
-3. When comfortable, create a **conventions file** for a real client from
+### Step 1 — get this repo onto your computer
+The AI assistant works on a **local folder**, so you first need these files on your PC. Pick whichever is easiest:
+
+- **Easiest — let the AI fetch it.** Open Claude Code / Antigravity in any folder and paste:
+  > *"Clone the public repo `https://github.com/puneetkeshav/tally-integration` into a folder on my machine,
+  > then open it and tell me in plain English what's inside and how to get started."*
+  >
+  > The assistant runs the download for you and opens the folder. (If it asks permission to run `git`, allow it.)
+- **With Git:** run `git clone https://github.com/puneetkeshav/tally-integration.git`, then open that folder in your assistant.
+- **No Git? Download the ZIP:** on the [repo page](https://github.com/puneetkeshav/tally-integration) click the
+  green **`Code`** button ▸ **Download ZIP**, unzip it, and open the unzipped folder in your assistant.
+
+### Step 2 — one prompt to set everything up
+Turn on **agent / auto mode** (§1a), make sure TallyPrime is running with a company loaded, then paste this
+**first setup prompt**. It's safe — it only reads and checks; it won't write to any book:
+
+> *"I've opened the tally-integration repo and I'm new to this. I'm on Windows with TallyPrime installed.
+> Walk me through setup in plain English, doing each step for me: (1) check Python is installed and install
+> this repo's `requirements.txt`; (2) help me switch on the Tally gateway on port 9000 following `SETUP.md`;
+> (3) then confirm you can connect and list the companies you can see. Don't write anything to any company —
+> reads only."*
+
+### Step 3 — practise safely, then go live
+1. **Build the throwaway practice company:** follow [`sample/`](./sample/) → create **`SampleCompany`**
+   (or restore the ready-made backup), seed it, and do **Exercise 1** (read it back). Nothing here touches a real client.
+2. When comfortable, create a **conventions file** for a real client from
    [`conventions-template.md`](./conventions-template.md), and always work the review-gated flow:
    gap-analyse → review sheet → test-small → bulk (idempotent) → reconcile.
 
