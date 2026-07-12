@@ -2,8 +2,8 @@
 
 A provider-agnostic reference for reading from and writing to **TallyPrime** programmatically
 via its **HTTP-XML Gateway**. Nothing here is specific to one company — for company-specific
-chart-of-accounts and posting conventions see the companion file
-`puneet-keshav-earan-conventions.md`.
+chart-of-accounts and posting conventions, create one per client from
+[`conventions-template.md`](./conventions-template.md).
 
 > Verified working against TallyPrime on Windows, gateway on `localhost:9000`, June 2026.
 

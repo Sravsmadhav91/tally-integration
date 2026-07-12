@@ -1,0 +1,7 @@
+remoteid,date,vtype,ledger,drcr,amount,narration
+SHEET-PAY-01,02-04-2025,Payment,Office Rent,Dr,25000,Office rent April
+SHEET-PAY-01,02-04-2025,Payment,Practice Bank,Cr,25000,
+SHEET-REC-01,30-04-2025,Receipt,Practice Bank,Dr,60000,Consulting fee - Client ABC
+SHEET-REC-01,30-04-2025,Receipt,Consulting Income,Cr,60000,
+SHEET-JRN-01,31-03-2026,Journal,Electricity,Dr,3000,Accrue electricity (bill unpaid)
+SHEET-JRN-01,31-03-2026,Journal,Vendor XYZ,Cr,3000,

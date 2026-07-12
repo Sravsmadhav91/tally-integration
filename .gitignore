@@ -7,6 +7,10 @@ out/
 __pycache__/
 *.pyc
 
+# Report cache (holds a client's data — never commit)
+scripts/.cache/
+*.sqlite
+
 # OS noise
 Thumbs.db
 desktop.ini

@@ -28,10 +28,17 @@ List the real ledger names **verbatim** (misspellings and trailing spaces includ
 ## 4. Posting recipes (mirror these exactly)
 Document the exact Dr/Cr for each recurring transaction: trades, charges, dividends, bank receipts/payments/
 contra, rent, salary, loan interest, etc. — with the source file each amount comes from.
+- **TDS / tax credits:** how salary/dividend/interest TDS is booked — anchor to **Form 26AS** and date each
+  deduction on its **cut date** (§192 salary per month; §194 dividend per company), not a year-end lump
+  (quirks #36). Note whether income is booked **net-of-TDS then grossed up**, and any clearing account used
+  (e.g. a salary clearing ledger under Loans & Advances).
 
 ## 5. Source files (the client's annual download set)
 `«D:\<CLIENT>\<FY>\»` — broker exports + bank statements + Form-16/tax reports. Note each file's coverage
-(quirks #30) and which bank ledger each statement maps to (quirks #35).
+(quirks #30) and which bank ledger each statement maps to (quirks #35). Include **Form 26AS** (the TDS-credit
+anchor — quirks #36) and **AIS/TIS** (cross-check gross income; remember AIS can carry duplicate/"Inactive"
+rows, so reconcile TDS to 26AS). Tax PDFs are usually password-protected (commonly PAN-lowercase + DOB
+`DDMMYYYY`).
 
 ## 6. The non-negotiable workflow: GAP ANALYSIS before any write
 1. Read what's already in Tally for the FY (Voucher Register export; filter by type + ledger).

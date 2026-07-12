@@ -1,0 +1,6 @@
+# Optional "power tools" — install only when a task actually needs one (see ENVIRONMENT.md #4).
+# The AI reads plain images/PDFs on its own; these cover the edge cases.
+pymupdf>=1.23      # password-protected PDFs (AIS/TIS, some e-statements) + fast bulk text extraction
+pdfplumber>=0.10   # PDFs with complex tables that plain reading mis-aligns
+pytesseract>=0.3   # bulk/offline OCR of scanned images (also needs the Tesseract program installed)
+pillow>=10.0       # image handling for pytesseract

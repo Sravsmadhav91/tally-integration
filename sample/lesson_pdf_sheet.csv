@@ -1,0 +1,7 @@
+remoteid,date,vtype,ledger,drcr,amount,narration
+LPDF-01,01-09-2025,Receipt,Practice Bank,Dr,40000,NEFT-CLIENT PQR
+LPDF-01,01-09-2025,Receipt,Consulting Income,Cr,40000,
+LPDF-02,02-09-2025,Payment,Electricity,Dr,3000,ELECTRICITY BOARD
+LPDF-02,02-09-2025,Payment,Practice Bank,Cr,3000,
+LPDF-03,30-09-2025,Payment,Bank Charges,Dr,150,BANK CHARGES
+LPDF-03,30-09-2025,Payment,Practice Bank,Cr,150,

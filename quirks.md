@@ -21,9 +21,22 @@ Mechanics detail lives in `tally-general-guide.md`; company-specific rules go in
 
 ## B. Reading (Export)
 4. **Collection `Narration` returns BLANK** even when it exists → use the **Voucher Register** data export.
-5. **Collection `ClosingBalance` / `ClosingQty` / `Stock Summary` return BLANK/empty** → can't get balances
-   that way. Reconstruct from the day book (#15), or use **Trial Balance** / **Profit and Loss** report
-   exports (report IDs work with `SVFROMDATE`/`SVTODATE`), or Object FETCH.
+5. **Getting ledger balances via the gateway is unreliable — and on a big book can HANG Tally.** A
+   `Collection` with `ClosingBalance`/`ClosingQty`/`Stock Summary` often returns BLANK; and see #5a —
+   fetching balances for a large multi-year book is very slow. To get a balance: read it in the **Tally
+   UI** (the Ledger screen shows opening/closing instantly), reconstruct from the day book (#15), or use
+   **Trial Balance** / **Profit and Loss** report exports (group-level; honour `SVFROMDATE`/`SVTODATE`).
+5a. **★ The gateway is effectively SINGLE-THREADED — a heavy READ can freeze Tally (looks like a crash).**
+   A whole-book `ClosingBalance` collection (balances for *all* ledgers), or a very large `Voucher
+   Register` pull, forces Tally to recompute by replaying all history and can peg it for minutes; the UI
+   stops responding. While it churns, **every new request queues behind it and times out**, so it
+   cascades and looks dead. Safeguards: (a) **never fetch closing balances for ALL ledgers** on a big
+   multi-year book — scope to one ledger/group (`CHILDOF`) or just read it in the UI; (b) set a
+   **generous client timeout** (heavy exports need 3–5 min, not 60 s) so you don't fire retries that pile
+   MORE work on the queue; (c) if it hangs, **stop hammering** — wait it out, or force-close & reopen
+   Tally. **Reads never corrupt data** (only writes change the book) — a hung read is safe to kill; allow
+   Tally's routine repair on reopen. **Imports (writes) are quick and do NOT cause this** — it's the
+   balance-computation READS.
 6. **Voucher Register date filter (`SVFROMDATE/SVTODATE`) is sometimes IGNORED** — may return the whole FY.
    Always re-filter in code by the dates returned. (The **Day Book** report often ignores the range too and
    returns only the current date — prefer Voucher Register for a full-FY pull.)
@@ -45,9 +58,20 @@ Mechanics detail lives in `tally-general-guide.md`; company-specific rules go in
 13. **XML-escape `&` → `&amp;`** in any name — a raw `&` makes the request malformed → `Unknown Request`.
 14. **Master import** (`REPORTNAME=All Masters`): include an **inner `<NAME>` tag** (not just the `NAME="…"`
     attribute) or it throws. Costing fields work too (FIFO Perpetual / Avg. Price).
-15. **Inventory invoice vouchers** need a `<BATCHALLOCATIONS.LIST>` (GODOWN `Main Location`, BATCH
-    `Primary Batch`) inside each inventory entry, plus a nested `<ACCOUNTINGALLOCATIONS.LIST>` and a
-    voucher-level `<LEDGERENTRIES.LIST>` for the party.
+15. **Inventory ("item") invoice vouchers — import in INVOICE mode, or Tally silently rejects them.**
+    A stock invoice needs ALL of: `VCHTYPE=Purchase`/`Sales` **with `OBJVIEW="Invoice Voucher View"` and
+    `<ISINVOICE>Yes</ISINVOICE>`**; the **party + tax (GST) legs in voucher-level `<LEDGERENTRIES.LIST>`**
+    (NOT `<ALLLEDGERENTRIES.LIST>`); each stock line in `<ALLINVENTORYENTRIES.LIST>` carrying a
+    `<BATCHALLOCATIONS.LIST>` (GODOWN `Main Location`, BATCH `Primary Batch`) **and** a nested
+    `<ACCOUNTINGALLOCATIONS.LIST>` → the purchase/sale ledger.
+15a. **★ The failure mode is OPAQUE.** Put the party in `<ALLLEDGERENTRIES.LIST>` (the accounting-voucher
+    shape) on a stock invoice and the import returns `<CREATED>0</CREATED><EXCEPTIONS>1</EXCEPTIONS>` with
+    **no `<LINEERROR>`** — zero hint. The *same* silent `EXCEPTIONS=1` also means **F11 → Inventory is OFF**.
+    So when a stock invoice throws it, check BOTH: (a) invoice-mode + `LEDGERENTRIES` shape, and (b) the
+    Inventory feature (F11) — don't assume it's one. (An accounting-only Purchase/Sales — party in
+    `ALLLEDGERENTRIES`, no inventory — imports fine; it's specifically the *stock* invoice that demands
+    invoice mode.) General rule: `EXCEPTIONS>0` with `ERRORS=0` and no `LINEERROR` = a data-shape/feature
+    problem Tally couldn't place, not a field-level validation error — re-check the voucher *structure*.
 16. **RATE:** supply `rate = amount ÷ qty` AND the exact `<AMOUNT>` → Tally shows the rate and keeps the
     amount exact. Amount+qty alone leaves the rate BLANK (no back-calc on import).
 17. **Sign convention:** `ISDEEMEDPOSITIVE=Yes` ⇒ Dr (negative `<AMOUNT>`); `No` ⇒ Cr (positive). Payment =
@@ -98,3 +122,26 @@ Mechanics detail lives in `tally-general-guide.md`; company-specific rules go in
 35. **Bank statements differ by bank** — identify each by the account number / holder header (statements from
     different banks reuse similar filenames). Interest is often credited on the 1st of the next period with a
     prior-day value date — decide value-date vs transaction-date for year-end.
+36. **Form 26AS is the anchor for TDS credits** (like the tax-P&L is for trades). It lists every deduction by
+    deductor, **section** (192 salary / 194 dividend / 194A interest), date, amount-paid and tax-deducted.
+    Reconcile the book's TDS **to 26AS, dated on each deduction's CUT DATE** — salary TDS per month (§192),
+    dividend TDS per company (§194), not one year-end lump. **AIS is supplementary and noisier:** it can carry
+    **"Inactive"/duplicate** rows (a superseded correction) and figures that don't tie — use **26AS for the
+    claimable amount**, AIS only to cross-check gross income. Common pattern: the book records income **net of
+    TDS** (the bank credit), so **gross it up per the 26AS lines** (`Dr TDS <type>` / `Cr <income>`) to claim
+    the credit; the check is *book-net + 26AS-TDS = 26AS-gross*, per payer. Mind the **ex-date vs receipt-date
+    straddle** — a dividend paid just after/before year-end sits in a different year's 26AS than the
+    receipt-basis income.
+37. **PDF source → sheet → Tally: let the AI READ the PDF; don't trust a generic table parser.** Bank/
+    invoice/tax PDFs vary wildly in layout, and one-size table extraction mangles them. Reliable flow: the AI
+    reads the PDF directly (its Read tool does PDFs/images via vision) → produces a **review sheet** in the
+    `import_sheet.py` schema (`remoteid,date,vtype,ledger,drcr,amount,narration`) → a human checks it →
+    `import_sheet.py` (dry-run, then `--post`). Use `scripts/pdf_extract.py` only for what the AI can't read
+    directly: **password-protected** PDFs (26AS/AIS/Form-16 — password is usually **PAN-lowercase + DOB
+    `DDMMYYYY`**) and bulk. **Whatever the method, PROVE the extraction is complete before importing** — a
+    missed/duplicated/mis-keyed line silently corrupts the book. **Strongest check: the running balance.** If
+    the source prints one (bank statements do), recompute it from the opening balance + each extracted line and
+    match the printed running balance **row by row** — that pinpoints the exact row where extraction slipped
+    (a grand total alone can hide two offsetting errors). No running balance? Tie to whatever control figures
+    the doc prints — **total debits, total credits, closing balance, and the transaction count**. Never
+    auto-post straight from a PDF; keep the review gate.
