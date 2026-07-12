@@ -27,10 +27,10 @@ You now get the same two years as the XML/seed route — **Practice Bank opening
 FY24-25 reference year (multi-bank, GST, TDS, loans, stock invoices) and the flawed FY25-26 practice year.
 Go to [`../README.md`](../README.md) for Lesson 0, the TDS/capital-gains lessons, and the exercises.
 
-> **Version note:** this backup was taken from **TallyPrime (data level 1800)**. A backup restores in the
-> **same major version or newer** — if your TallyPrime is older and can't restore it, fall back to the
-> XML import (route B) or the seed script (route A) in [`../README.md`](../README.md) — both are
-> version-neutral.
+> **Version note:** this backup was taken from **TallyPrime 6.1** (data level 1800). A backup restores in the
+> **same major version or newer** — so **TallyPrime 6.1 or later** opens it directly. On an **older**
+> TallyPrime it won't restore; fall back to the XML import (route B) or the seed script (route A) in
+> [`../README.md`](../README.md) — both are version-neutral.
 
 ## Producing / refreshing the backup (maintainers)
 
