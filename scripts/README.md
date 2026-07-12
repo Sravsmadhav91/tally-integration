@@ -63,6 +63,21 @@ python pdf_extract.py --file invoice.pdf --tables --out lines.csv      # tables 
 **Round-trip:** `pdf_extract.py` (or AI reads the PDF) → structured **sheet** → `import_sheet.py --dry-run`
 → `--post` → `tally_report.py` to verify the balances moved. Read + write, one repo.
 
+## `capital_gains.py` — equity STCG/LTCG split (tax cross-check)
+Classify equity sale lots into **STCG §111A** vs **LTCG §112A**, apply **31-Jan-2018 grandfathering**, and
+total up (with the §112A exemption) for filing. Input is a normalised lot sheet
+(`security, isin, buy_date, buy_value, sell_date, sell_value, fmv_31jan2018?`, values as totals).
+```bash
+python capital_gains.py --file trades.csv                    # print the split + summary
+python capital_gains.py --file trades.csv --out gains.xlsx   # filing-ready workbook (111A / 112A / all / summary)
+```
+The distinctive real-world step is **building that sheet**: AIS lists the sale but often reports **₹0 cost**
+for old/off-market lots — fill it from the **broker** report, reconciling by ISIN (quirks #38). Grandfathering
+(for lots bought pre-01-Feb-2018): deemed cost = higher of (actual cost, lower of (FMV 31-Jan-2018, sale)).
+Worked example + expected numbers: [`../sample/capital_gains/`](../sample/capital_gains/).
+> Rates/exemption/holding-period are set by the Finance Act and change yearly — this **classifies and totals**;
+> your CA signs off. Not tax advice.
+
 ## The safe workflow (do this every time)
 1. **Back up** in-app; confirm the **licence is active** (not Educational — quirks #2a).
 2. **Gap-analyse**: `export('Voucher Register', fy_start, fy_end)`, parse what exists, diff against the source

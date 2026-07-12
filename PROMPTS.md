@@ -44,6 +44,9 @@ swap the `<placeholders>` (`<Your Company>`, `<FY>` like `2025-26`, `<path>`, `<
 ## Tax cross-checks
 - "Cross-check the book against my **AIS/TIS** at `<path>` (password `<pan-lowercase><ddmmyyyy>`) and flag differences."
 - "Reconcile my **F&O** book P&L to the broker tax-P&L (account for MTM and open positions)."
+- "Reconcile my **AIS capital-gains** against the **broker** report at `<path>`, **fill the zero-cost lots**
+  from the broker, then split into **STCG 111A / LTCG 112A** (apply 31-Jan-2018 grandfathering) — show me the
+  totals before I file."
 
 ## If something looks off
 - "This balance doesn't match — trace where the difference comes from, with evidence (voucher dates/amounts)."

@@ -22,6 +22,9 @@ you every entry before anything is saved**.
 - **PDF → sheet → Tally pipeline** — [`pdf_extract.py`](./scripts/pdf_extract.py) (text/tables, handles
   password-protected 26AS/AIS/Form-16) → a reviewed Excel/CSV → [`import_sheet.py`](./scripts/import_sheet.py)
   (dry-run by default, `--post` to write). Prove completeness against the running balance before importing.
+- **Capital-gains split** — [`capital_gains.py`](./scripts/capital_gains.py): classify equity sales into
+  STCG §111A / LTCG §112A with **31-Jan-2018 grandfathering** and a §112A-exemption summary; the sample
+  teaches the AIS↔broker reconciliation that fills AIS's missing (zero) costs.
 - **Two-year practice sandbox** — [`sample/`](./sample/): a *correct* FY24-25 reference year (multi-bank,
   sales/purchase, GST, TDS, loans, inventory invoices) and a *flawed* FY25-26 practice year with **5 planted
   issues** + a mismatching bank statement. Includes **Lesson 0** (post from Excel; bank lines from a PDF),
@@ -31,7 +34,7 @@ you every entry before anything is saved**.
   mode**, install Python & Tally; what the AI reads natively; using it on a real book; a plain-English
   glossary. Copy-paste prompts in [`PROMPTS.md`](./PROMPTS.md).
 - **The mechanics & the traps** — [`tally-general-guide.md`](./tally-general-guide.md) and
-  [`quirks.md`](./quirks.md) (37 non-obvious gotchas), plus 13 copy-paste XML
+  [`quirks.md`](./quirks.md) (38 non-obvious gotchas), plus 13 copy-paste XML
   [`examples/`](./examples/) and a per-company [`conventions-template.md`](./conventions-template.md).
 
 ### Safety model

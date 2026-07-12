@@ -145,3 +145,16 @@ Mechanics detail lives in `tally-general-guide.md`; company-specific rules go in
     (a grand total alone can hide two offsetting errors). No running balance? Tie to whatever control figures
     the doc prints — **total debits, total credits, closing balance, and the transaction count**. Never
     auto-post straight from a PDF; keep the review gate.
+38. **Capital gains: AIS shows the SALE but usually NOT your cost — fill it from the broker, then split.**
+    The AIS/TIS equity-sale schedule lists every sale + consideration, but the **cost of acquisition is often
+    ₹0** for old or off-market lots (the dept doesn't know your purchase price). Filing straight off AIS taxes
+    the **full sale value** — a huge over-statement. Fill the missing cost from the **broker's capital-gains
+    report** (it has the real buy value + dates), reconciling by ISIN, and check every AIS sale has a broker
+    lot (and vice-versa) so nothing is unreported or double-counted. Then classify per lot: listed equity is
+    **LTCG (§112A) if held > 12 months**, else **STCG (§111A)**. For LTCG on shares **bought before
+    01-Feb-2018, apply grandfathering**: deemed cost = *higher of* (actual cost, *lower of* (FMV on 31-Jan-2018,
+    sale consideration)) — the 2018 FMV can only shrink a gain, never create a loss. `scripts/capital_gains.py`
+    does the split + grandfathering + a §112A-exemption summary from a normalised lot sheet; the AIS↔broker
+    reconciliation is the human/AI step (see `sample/capital_gains/`). **Rates, the exemption (₹1.25L) and the
+    holding-period rule are set by the Finance Act and change year to year — the tool classifies, the CA signs
+    off.**

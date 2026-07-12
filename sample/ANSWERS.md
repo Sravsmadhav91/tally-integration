@@ -54,6 +54,28 @@ Post each on its **cut date** (`Dr TDS Receivable / Cr income`), one per line:
 row is NOT claimable — booking it would overstate the credit by ₹600. Salary is split **per month**,
 dividends **per company**, each on its own date — never a single year-end lump.
 
+## Lesson — capital gains (answer)
+
+Reconcile AIS ↔ broker, fill the zero-cost lots, then split. The three AIS lots with `cost = 0` (DELTA,
+EPSILON, ZETA) get their cost from the broker's buy value (40,000 / 30,000 / 25,000).
+
+| Scrip | Held | Term | Sale | Cost used | Gain/Loss | Note |
+|---|---|---|--:|--:|--:|---|
+| ALPHA | ~5 mo | STCG 111A | 95,000 | 80,000 | **+15,000** | |
+| BETA | ~5 mo | STCG 111A | 1,12,000 | 1,20,000 | **−8,000** | short-term loss |
+| GAMMA | ~3.5 yr | LTCG 112A | 1,40,000 | 50,000 | **+90,000** | bought 2022 → no grandfathering |
+| DELTA | ~10 yr | LTCG 112A | 1,50,000 | **90,000** | **+60,000** | pre-2018: deemed cost = max(40k, min(FMV 90k, sale 150k)) = 90k |
+| EPSILON | ~9.5 yr | LTCG 112A | 1,00,000 | **1,00,000** | **0** | pre-2018: max(30k, min(FMV 110k, sale 100k)) = 100k → gain floored to 0 |
+| ZETA | ~14 mo | LTCG 112A | 45,000 | 25,000 | **+20,000** | AIS cost was 0 → filled from broker |
+
+- **STCG (111A) net = ₹7,000** (15,000 − 8,000).
+- **LTCG (112A) net = ₹1,70,000** (90k + 60k + 0 + 20k); after the **₹1,25,000** Sec 112A exemption →
+  **taxable LTCG ₹45,000**.
+
+**Traps this teaches:** (1) filing straight off AIS taxes the *full sale value* of the three zero-cost lots
+(you'd overpay on ~₹95,000 of phantom gain); (2) skipping grandfathering over-taxes DELTA (110k vs 60k) and
+EPSILON (70k vs 0). Reproduce: `python ../scripts/capital_gains.py --file capital_gains/trades.csv`.
+
 ## FY24-25 reference — why it balances
 
 Income: Consulting 12×50,000 = 6,00,000 + Bank Interest 2,000 = **6,02,000**.

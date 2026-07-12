@@ -109,6 +109,41 @@ The real round-trip: turn a source **PDF** into a reviewed **sheet**, then post 
 
 ---
 
+## Lesson — capital gains: AIS ↔ broker → STCG/LTCG split
+
+At return time you reconcile the **same equity sales seen three ways** and produce a filing-ready split.
+The files in [`capital_gains/`](./capital_gains/) are a synthetic six-scrip example:
+
+- [`ais_extract.csv`](./capital_gains/ais_extract.csv) — the tax dept's view (every sale + consideration).
+  Note three lots show **`cost_ais_reported = 0`**: AIS often **doesn't know your purchase price** for
+  old / off-market lots.
+- [`broker_report.csv`](./capital_gains/broker_report.csv) — the broker's view (real buy value + dates +
+  its own Short/Long tag). This is what **fills the zero costs**.
+- [`trades.csv`](./capital_gains/trades.csv) — the **reconciled, normalised** lot list (cost filled in),
+  ready to classify.
+
+**The task:**
+1. **Reconcile & fill.** Match AIS to the broker by ISIN. Where AIS cost is 0, fill it from the broker's buy
+   value (that's how `trades.csv` was built). Check every AIS sale consideration has a broker lot and
+   vice-versa — a missing lot means an unreported (or double-counted) sale.
+2. **Split into Sec 111A / 112A:**
+   ```bash
+   python ../scripts/capital_gains.py --file capital_gains/trades.csv --out gains.xlsx
+   ```
+   - **STCG (111A):** held ≤ 12 months → gain = sale − cost.
+   - **LTCG (112A):** held > 12 months. For lots **bought before 01-Feb-2018**, **grandfathering** applies:
+     deemed cost = *higher of* (actual cost, *lower of* (FMV on 31-Jan-2018, sale price)) — so the 2018 FMV
+     can only shrink a gain, never create a loss.
+3. **Expected result:** STCG net **₹7,000**; LTCG net **₹1,70,000** (2 lots grandfathered — DELTA capped to a
+   ₹60,000 gain, EPSILON floored to ₹0); after the Sec 112A **₹1,25,000** exemption, taxable LTCG **₹45,000**.
+
+> **Why this matters:** if you file straight off AIS, the zero-cost lots inflate your gain massively (you'd
+> pay tax on the *full* sale value). And forgetting grandfathering over-taxes pre-2018 holdings. The tool
+> classifies + totals; **your CA confirms the rates and thresholds** for the year (they change by Budget).
+> See [quirks #38](../quirks.md).
+
+---
+
 ## The reference year (FY2024-25)
 
 Set the period to **FY24-25** and open the day book / trial balance. It's a clean, balanced year covering
