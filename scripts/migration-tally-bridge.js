@@ -19,6 +19,8 @@
  *   --tally-url=http://localhost:9000  (default)
  *   --company="Exact company name"     (defaults to first company from List of Companies)
  *   --replace-chart                     (requests account chart replacement before ledger import)
+ *   --masters-only                      (import ledgers/groups/opening balances only)
+ *   --vouchers-only                     (import vouchers only; keeps existing chart)
  *   --from=YYYY-MM-DD                  (voucher range start, default: 365 days ago)
  *   --to=YYYY-MM-DD                    (voucher range end, default: today)
  */
@@ -35,11 +37,15 @@ function parseArgs(argv) {
     tallyUrl: process.env.TALLY_URL || "http://localhost:9000",
     company: "",
     replaceChart: false,
+    mastersOnly: false,
+    vouchersOnly: false,
     from: "",
     to: "",
   };
   for (const raw of argv) {
     if (raw === "--replace-chart") args.replaceChart = true;
+    else if (raw === "--masters-only") args.mastersOnly = true;
+    else if (raw === "--vouchers-only") args.vouchersOnly = true;
     else if (raw.startsWith("--endpoint=")) args.endpoint = raw.slice("--endpoint=".length);
     else if (raw.startsWith("--token=")) args.token = raw.slice("--token=".length);
     else if (raw.startsWith("--tally-url=")) args.tallyUrl = raw.slice("--tally-url=".length);
@@ -47,7 +53,7 @@ function parseArgs(argv) {
     else if (raw.startsWith("--from=")) args.from = raw.slice("--from=".length);
     else if (raw.startsWith("--to=")) args.to = raw.slice("--to=".length);
     else if (raw === "--help" || raw === "-h") {
-      console.log("Use --endpoint, --token, optional --company, --replace-chart, --from, --to, --tally-url");
+      console.log("Use --endpoint, --token, optional --company, --replace-chart, --masters-only, --vouchers-only, --from, --to, --tally-url");
       process.exit(0);
     }
   }
@@ -237,6 +243,8 @@ async function main() {
 
   if (!args.endpoint.trim()) fail("Missing endpoint. Use --endpoint=... or set TALLY_BRIDGE_ENDPOINT");
   if (!args.token.trim()) fail("Missing token. Use --token=... or set TALLY_BRIDGE_TOKEN");
+  if (args.mastersOnly && args.vouchersOnly) fail("Use only one of --masters-only or --vouchers-only");
+  if (args.replaceChart && args.vouchersOnly) fail("--replace-chart can only be used with the master import");
   assertIsoDate(fromDate, "from");
   assertIsoDate(toDate, "to");
 
@@ -251,16 +259,22 @@ async function main() {
   }
   console.log(`Using company: ${company}`);
 
-  console.log("Reading Tally ledgers...");
-  const ledgerXml = await postXml(args.tallyUrl, ledgerCollectionXml(company));
-  console.log("Reading Tally groups...");
-  const groupXml = await postXml(args.tallyUrl, groupCollectionXml(company));
-  console.log("Reading Tally Voucher Register...");
-  const voucherXml = await postXml(args.tallyUrl, voucherRegisterXml(company, fromDate, toDate), 600000);
-
-  const ledgers = parseLedgers(ledgerXml);
-  const groups = parseGroups(groupXml);
-  const vouchers = parseVouchers(voucherXml).filter((row) => row.date >= fromDate && row.date <= toDate);
+  let ledgers = [];
+  let groups = [];
+  let vouchers = [];
+  if (!args.vouchersOnly) {
+    console.log("Reading Tally ledgers...");
+    const ledgerXml = await postXml(args.tallyUrl, ledgerCollectionXml(company));
+    console.log("Reading Tally groups...");
+    const groupXml = await postXml(args.tallyUrl, groupCollectionXml(company));
+    ledgers = parseLedgers(ledgerXml);
+    groups = parseGroups(groupXml);
+  }
+  if (!args.mastersOnly) {
+    console.log("Reading Tally Voucher Register...");
+    const voucherXml = await postXml(args.tallyUrl, voucherRegisterXml(company, fromDate, toDate), 600000);
+    vouchers = parseVouchers(voucherXml).filter((row) => row.date >= fromDate && row.date <= toDate);
+  }
 
   if (!ledgers.length && !vouchers.length) {
     fail("No ledgers or vouchers were parsed from Tally responses.");
@@ -269,7 +283,7 @@ async function main() {
   console.log(`Parsed ${ledgers.length} ledgers, ${groups.length} groups, ${vouchers.length} vouchers`);
   const result = await uploadBridge(args.endpoint, args.token, {
     company,
-    replaceChart: args.replaceChart,
+    replaceChart: args.replaceChart && !args.vouchersOnly,
     fromDate,
     toDate,
     ledgers,
