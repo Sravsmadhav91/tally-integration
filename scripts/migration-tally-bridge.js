@@ -100,12 +100,12 @@ function parseSignedAmount(rawValue) {
   return /cr\b/i.test(raw) && amount > 0 ? -amount : amount;
 }
 
-async function postXml(url, xml) {
+async function postXml(url, xml, timeoutMs = 300000) {
   const response = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "text/xml" },
     body: xml,
-    signal: AbortSignal.timeout ? AbortSignal.timeout(30000) : undefined,
+    signal: AbortSignal.timeout ? AbortSignal.timeout(timeoutMs) : undefined,
   });
   if (!response.ok) {
     const preview = (await response.text().catch(() => "")).slice(0, 200);
@@ -251,11 +251,12 @@ async function main() {
   }
   console.log(`Using company: ${company}`);
 
-  const [ledgerXml, groupXml, voucherXml] = await Promise.all([
-    postXml(args.tallyUrl, ledgerCollectionXml(company)),
-    postXml(args.tallyUrl, groupCollectionXml(company)),
-    postXml(args.tallyUrl, voucherRegisterXml(company, fromDate, toDate)),
-  ]);
+  console.log("Reading Tally ledgers...");
+  const ledgerXml = await postXml(args.tallyUrl, ledgerCollectionXml(company));
+  console.log("Reading Tally groups...");
+  const groupXml = await postXml(args.tallyUrl, groupCollectionXml(company));
+  console.log("Reading Tally Voucher Register...");
+  const voucherXml = await postXml(args.tallyUrl, voucherRegisterXml(company, fromDate, toDate), 600000);
 
   const ledgers = parseLedgers(ledgerXml);
   const groups = parseGroups(groupXml);
