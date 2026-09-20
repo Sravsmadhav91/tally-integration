@@ -219,7 +219,7 @@ async function uploadBridge(endpoint, token, payload) {
       "Authorization": `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
-    signal: AbortSignal.timeout ? AbortSignal.timeout(60000) : undefined,
+    signal: AbortSignal.timeout ? AbortSignal.timeout(300000) : undefined,
   });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
